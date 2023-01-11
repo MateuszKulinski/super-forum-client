@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import Home from "./components/routes/Home";
+import { Routes, Route } from "react-router-dom";
+import Thread from "./components/routes/thread/Thread";
+import UserProfile from "./components/routes/userProfile/UserProfile";
+import { useDispatch } from "react-redux";
+import { UserProfileSetType } from "./store/user/Reducer";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        // todo: replace with GraphQL call
+        dispatch({
+            type: UserProfileSetType,
+            payload: {
+                id: 1,
+                userName: "użytkownikTestowy",
+            },
+        });
+    }, [dispatch]);
+
+    return (
+        <Routes>
+            <Route path="*" element={<Home />} />
+            <Route path="/categorythreads/:categoryId" element={<Home />} />
+            <Route path="/thread/:id" element={<Thread />} />
+            <Route path="/userprofile/:id" element={<UserProfile />} />
+        </Routes>
+    );
 }
 
 export default App;
