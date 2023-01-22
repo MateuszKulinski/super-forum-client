@@ -31,52 +31,67 @@ const SideBarMenus = () => {
     };
 
     const onClickToggleLogout = () => {
-        setShowLogin(!showLogin);
+        setshowLogout(!showLogout);
     };
 
     return (
         <React.Fragment>
             <ul>
-                <li>
-                    <FontAwesomeIcon icon={faUser} />
-                    <span className="menu-name">
-                        <Link to={`/userprofile/${user?.id}`}>
-                            {user?.userName}
-                        </Link>
-                    </span>
-                </li>
-                <li>
-                    <FontAwesomeIcon
-                        onClick={onClickToggleRegister}
-                        icon={faRegistered}
-                    />
-                    <span className="menu-name">Rejestracja</span>
-                    <Registration
-                        isOpen={showRegister}
-                        onClickToggle={onClickToggleRegister}
-                    />
-                </li>
-                <li>
-                    <FontAwesomeIcon
-                        onClick={onClickToggleLogin}
-                        icon={faSignInAlt}
-                    />
-                    <span className="menu-name">Logowanie</span>
-                    <Login
-                        isOpen={showLogin}
-                        onClickToggle={onClickToggleLogin}
-                    />
-                </li>
-                <li>
-                    <FontAwesomeIcon icon={faSignOutAlt} />
-                    <span onClick={onClickToggleLogout} className="menu-name">
-                        logout
-                    </span>
-                    <Logout
-                        isOpen={showLogout}
-                        onClickToggle={onClickToggleLogout}
-                    />
-                </li>
+                {user ? (
+                    <li>
+                        <FontAwesomeIcon icon={faUser} />
+                        <span className="menu-name">
+                            <Link to={`/userprofile/${user.id}`}>
+                                {user?.userName}
+                            </Link>
+                        </span>
+                    </li>
+                ) : null}
+                {user ? null : (
+                    <li>
+                        <FontAwesomeIcon icon={faRegistered} />
+                        <span
+                            onClick={onClickToggleRegister}
+                            className="menu-name"
+                        >
+                            Rejestracja
+                        </span>
+                        <Registration
+                            isOpen={showRegister}
+                            onClickToggle={onClickToggleRegister}
+                        />
+                    </li>
+                )}
+                {user ? null : (
+                    <li>
+                        <FontAwesomeIcon icon={faSignInAlt} />
+                        <span
+                            onClick={onClickToggleLogin}
+                            className="menu-name"
+                        >
+                            Logowanie
+                        </span>
+                        <Login
+                            isOpen={showLogin}
+                            onClickToggle={onClickToggleLogin}
+                        />
+                    </li>
+                )}
+                {user ? (
+                    <li>
+                        <FontAwesomeIcon icon={faSignOutAlt} />
+                        <span
+                            onClick={onClickToggleLogout}
+                            className="menu-name"
+                        >
+                            Wylogowanie
+                        </span>
+                        <Logout
+                            isOpen={showLogout}
+                            onClickToggle={onClickToggleLogout}
+                        />
+                    </li>
+                ) : null}
             </ul>
         </React.Fragment>
     );

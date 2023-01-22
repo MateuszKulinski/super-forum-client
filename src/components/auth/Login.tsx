@@ -5,8 +5,23 @@ import userReducer from "./common/UserReducer";
 import { allowSubmit } from "./common/Helpers";
 import { useDispatch } from "react-redux";
 import { UserProfileSetType } from "../../store/user/Reducer";
+import { gql, useMutation } from "@apollo/client";
+import useRefreshReduxMe, { Me } from "../../hooks/useRefreshReduxMe";
+
+const LoginMutation = gql`
+    mutation Login($userName: String!, $password: String!) {
+        login(userName: $userName, password: $password)
+    }
+`;
 
 const Login: FC<ModalProps> = ({ isOpen, onClickToggle }) => {
+    const [execLogin] = useMutation(LoginMutation, {
+        refetchQueries: [
+            {
+                query: Me,
+            },
+        ],
+    });
     const [{ userName, password, resultMsg, isSubmitDisabled }, dispatch] =
         useReducer(userReducer, {
             userName: "",
@@ -14,38 +29,48 @@ const Login: FC<ModalProps> = ({ isOpen, onClickToggle }) => {
             resultMsg: "",
             isSubmitDisabled: true,
         });
-    const reduxDispatch = useDispatch();
 
-    useEffect(() => {
-        // todo: replace with GraphQL call
-        reduxDispatch({
-            type: UserProfileSetType,
-            payload: {
-                id: 1,
-                userName: "testUser",
-            },
-        });
-    }, [reduxDispatch]);
+    const { execMe, updateMe } = useRefreshReduxMe();
+    // const reduxDispatch = useDispatch();
+
+    // useEffect(() => {
+    //     // todo: replace with GraphQL call
+    //     reduxDispatch({
+    //         type: UserProfileSetType,
+    //         payload: {
+    //             id: 1,
+    //             userName: "testUser",
+    //         },
+    //     });
+    // }, [reduxDispatch]);
 
     const onChangeUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch({ type: "userName", payload: e.target.value });
         if (!e.target.value)
-            allowSubmit(dispatch, "Username cannot be empty", true);
+            allowSubmit(dispatch, "Nazwa użytkownika nie może być pusta", true);
         else allowSubmit(dispatch, "", false);
     };
 
     const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch({ type: "password", payload: e.target.value });
         if (!e.target.value)
-            allowSubmit(dispatch, "Password cannot be empty", true);
+            allowSubmit(dispatch, "Hasło nie może być puste", true);
         else allowSubmit(dispatch, "", false);
     };
 
-    const onClickLogin = (
+    const onClickLogin = async (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
         e.preventDefault();
         onClickToggle(e);
+        const result = await execLogin({
+            variables: {
+                userName,
+                password,
+            },
+        });
+        execMe();
+        updateMe();
     };
 
     const onClickCancel = (
