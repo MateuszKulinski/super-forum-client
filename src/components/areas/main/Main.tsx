@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import MainHeader from "./MainHeader";
 import { useParams } from "react-router-dom";
 import ThreadCard from "./ThreadCard";
-import { getThreadsByCategory } from "../../../services/DataService";
 import Category from "../../../model/Category";
 import { gql, useLazyQuery } from "@apollo/client";
 
@@ -18,6 +17,10 @@ const GetThreadsByCategoryId = gql`
                     title
                     body
                     views
+                    points
+                    user {
+                        userName
+                    }
                     threadItems {
                         id
                     }
@@ -43,6 +46,10 @@ const GetThreadsLatest = gql`
                     title
                     body
                     views
+                    points
+                    user {
+                        userName
+                    }
                     threadItems {
                         id
                     }

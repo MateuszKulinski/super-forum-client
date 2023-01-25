@@ -1,6 +1,4 @@
 import Category from "../model/Category";
-import CategoryThread from "../model/CategoryThread";
-import Thread from "../model/Thread";
 
 export async function getCategories(): Promise<Array<Category>> {
     const promise = new Promise<Array<Category>>((res, rej) => {
@@ -22,10 +20,11 @@ export async function getCategories(): Promise<Array<Category>> {
     });
     return promise;
 }
-
+/*
 export async function getThreadsByCategory(
     catId: string
 ): Promise<Array<Thread>> {
+    const user = new User("0", "tester@test.com", "tester");
     const promise = new Promise<Array<Thread>>((res, rej) => {
         setTimeout(() => {
             const threads: Array<Thread> = [];
@@ -34,8 +33,7 @@ export async function getThreadsByCategory(
                 views: 22,
                 title: "Thread 1",
                 body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                userName: "dave",
-                userId: "1",
+                user: user,
                 points: 11,
                 createdOn: new Date(),
                 lastModifiedOn: new Date(),
@@ -45,8 +43,7 @@ export async function getThreadsByCategory(
                         views: 22,
                         points: 2,
                         body: "ThreadItem 1",
-                        userName: "jon",
-                        userId: "2",
+                        user: user,
                         createdOn: new Date(),
                         threadId: "1",
                     },
@@ -69,7 +66,7 @@ export async function getThreadsByCategory(
                         views: 22,
                         points: 2,
                         body: "ThreadItem 1",
-                        userName: "jon",
+                        user:{userName: "jon"},
                         userId: "2",
                         createdOn: new Date(),
                         threadId: "2",
@@ -245,3 +242,4 @@ export async function getUserThreads(id: string): Promise<Array<Thread>> {
     });
     return result;
 }
+*/

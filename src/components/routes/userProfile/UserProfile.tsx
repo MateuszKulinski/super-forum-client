@@ -5,10 +5,8 @@ import "./UserProfile.css";
 import Nav from "../../areas/Nav";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../store/AppState";
-import { getUserThreads } from "../../../services/DataService";
 import { Link } from "react-router-dom";
 import Thread from "../../../model/Thread";
-import ThreadItem from "../../../model/ThreadItem";
 import { gql, useMutation } from "@apollo/client";
 
 const ChangePassword = gql`
