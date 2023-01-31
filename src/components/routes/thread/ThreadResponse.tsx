@@ -9,6 +9,9 @@ interface ThreadResponseProps {
     lastModifiedOn?: Date;
     points: number;
     readOnly?: boolean;
+    userId: string;
+    threadItemId: string;
+    refreshThread?: () => void;
 }
 
 const ThreadResponse: FC<ThreadResponseProps> = ({
@@ -17,6 +20,9 @@ const ThreadResponse: FC<ThreadResponseProps> = ({
     lastModifiedOn,
     points,
     readOnly,
+    userId,
+    threadItemId,
+    refreshThread,
 }) => {
     return (
         <div>
@@ -26,7 +32,12 @@ const ThreadResponse: FC<ThreadResponseProps> = ({
                     lastModifiedOn={lastModifiedOn}
                 />
                 <span style={{ marginLeft: "1em" }}>
-                    <ThreadPointsInline points={points || 0} />
+                    <ThreadPointsInline
+                        points={points || 0}
+                        threadItemId={threadItemId}
+                        refreshThread={refreshThread}
+                        allowUpdatePoints={true}
+                    />
                 </span>
             </div>
             <div className="thread-body-editor">

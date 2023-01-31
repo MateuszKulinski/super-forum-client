@@ -20,6 +20,7 @@ const GetThreadById = gql`
             ... on Thread {
                 id
                 user {
+                    id
                     userName
                 }
                 lastModifiedOn
@@ -35,6 +36,7 @@ const GetThreadById = gql`
                     body
                     points
                     user {
+                        id
                         userName
                     }
                 }
@@ -44,11 +46,23 @@ const GetThreadById = gql`
 `;
 
 const Thread = () => {
-    const [execGetThreadById, { data: threadData }] =
-        useLazyQuery(GetThreadById);
+    const [execGetThreadById, { data: threadData }] = useLazyQuery(
+        GetThreadById,
+        { fetchPolicy: "no-cache" }
+    );
     const [thread, setThread] = useState<ThreadModel | undefined>();
     const { id } = useParams();
     const [readOnly, setReadOnly] = useState(false);
+
+    const refreshThread = () => {
+        if (id && parseInt(id) > 0) {
+            execGetThreadById({
+                variables: {
+                    id,
+                },
+            });
+        }
+    };
 
     useEffect(() => {
         if (id && parseInt(id) > 0) {
@@ -65,8 +79,10 @@ const Thread = () => {
         console.log("Obiekt threadData", threadData);
         if (threadData && threadData.getThreadById) {
             setThread(threadData.getThreadById);
+            setReadOnly(true);
         } else {
             setThread(undefined);
+            setReadOnly(false);
         }
     }, [threadData]);
     return (
@@ -82,7 +98,7 @@ const Thread = () => {
                         lastModifiedOn={
                             thread ? thread.lastModifiedOn : new Date()
                         }
-                    />{" "}
+                    />
                     <ThreadCategory category={thread?.category} />
                     <ThreadTitle title={thread?.title} />
                     <ThreadBody body={thread?.body} readOnly={readOnly} />
@@ -95,6 +111,9 @@ const Thread = () => {
                             thread.threadItems &&
                             thread.threadItems.length
                         }
+                        threadId={thread?.id || "0"}
+                        allowUpdatePoints={true}
+                        refreshThread={refreshThread}
                     />
                 </div>
                 <div className="thread-content-response-container">
@@ -102,6 +121,7 @@ const Thread = () => {
                     <ThreadResponsesBuilder
                         threadItems={thread?.threadItems}
                         readOnly={readOnly}
+                        refreshThread={refreshThread}
                     />
                 </div>
             </div>

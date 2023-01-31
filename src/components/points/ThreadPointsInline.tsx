@@ -1,31 +1,93 @@
 import React, { FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { ThreadPointsBarProps } from "./ThreadPointsBar";
+import {
+    faChevronDown,
+    faChevronUp,
+    faHeart,
+} from "@fortawesome/free-solid-svg-icons";
+import "./ThreadPointsInline.css";
+import { gql, useMutation } from "@apollo/client";
 
-const ThreadPointsInline: FC<ThreadPointsBarProps> = ({
-  points,
-  responseCount,
+const UpdateThreadItemPoint = gql`
+    mutation UpdateThreadItemPoint($threadItemId: ID!, $increment: Boolean!) {
+        updateThreadItemPoint(
+            threadItemId: $threadItemId
+            increment: $increment
+        )
+    }
+`;
+
+class ThreadPointsInlineProps {
+    points: number = 0;
+    threadId?: string;
+    threadItemId?: string;
+    allowUpdatePoints?: boolean = false;
+    refreshThread?: () => void;
+}
+
+const ThreadPointsInline: FC<ThreadPointsInlineProps> = ({
+    points,
+    threadId,
+    threadItemId,
+    allowUpdatePoints,
+    refreshThread,
 }) => {
-  return (
-    <React.Fragment>
-      <label
-        style={{
-          marginRight: ".75em",
-          marginTop: ".25em",
-        }}
-      >
-        {points || 0}
-        <FontAwesomeIcon
-          icon={faHeart}
-          className="points-icon"
-          style={{
-            marginLeft: ".2em",
-          }}
-        />
-      </label>
-    </React.Fragment>
-  );
+    const [execUpdateThreadItemPoint] = useMutation(UpdateThreadItemPoint);
+    const onClickIncThreadItemPoint = async (
+        e: React.MouseEvent<SVGSVGElement, MouseEvent>
+    ) => {
+        e.preventDefault();
+        await execUpdateThreadItemPoint({
+            variables: {
+                threadItemId,
+                increment: true,
+            },
+        });
+        console.log(refreshThread);
+        refreshThread && refreshThread();
+    };
+    const onClickDecThreadItemPoint = async (
+        e: React.MouseEvent<SVGSVGElement, MouseEvent>
+    ) => {
+        e.preventDefault();
+        await execUpdateThreadItemPoint({
+            variables: {
+                threadItemId,
+                increment: false,
+            },
+        });
+        console.log(refreshThread);
+        refreshThread && refreshThread();
+    };
+
+    return (
+        <span className="threadpointsinline-item">
+            <div
+                className="threadpointsinline-item-btn"
+                style={{ display: `${allowUpdatePoints ? "block" : "none"}` }}
+            >
+                <FontAwesomeIcon
+                    icon={faChevronUp}
+                    className="point-icon"
+                    onClick={onClickIncThreadItemPoint}
+                />
+            </div>
+            {points}
+            <div
+                className="threadpointsinline-item-btn"
+                style={{ display: `${allowUpdatePoints ? "block" : "none"}` }}
+            >
+                <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className="point-icon"
+                    onClick={onClickDecThreadItemPoint}
+                />
+            </div>
+            <div className="threadpointsinline-item-btn">
+                <FontAwesomeIcon icon={faHeart} className="points-icon" />
+            </div>
+        </span>
+    );
 };
 
 export default ThreadPointsInline;
