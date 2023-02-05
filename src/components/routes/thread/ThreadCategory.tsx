@@ -6,18 +6,21 @@ import CategoryDropDown from "../../CategoryDropDown";
 
 interface ThreadCategoryProps {
     category?: Category;
+    sendOutSelectedCategory: (cat: Category) => void;
 }
 
-const ThreadCategory: FC<ThreadCategoryProps> = ({ category }) => {
-    const sendOutSelectedCategory = (cat: Category) => {
-        console.log("selected category", cat);
-    };
-
+const ThreadCategory: FC<ThreadCategoryProps> = ({
+    category,
+    sendOutSelectedCategory,
+}) => {
     return (
         <div className="thread-category-container">
             <strong>{category?.name}</strong>
             <div style={{ marginTop: "1em" }}>
-                <CategoryDropDown preselectedCategory={category} />
+                <CategoryDropDown
+                    preselectedCategory={category}
+                    sendOutSelectedCategory={sendOutSelectedCategory}
+                />
             </div>
         </div>
     );

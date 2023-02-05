@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import ThreadPointsBar from "../../points/ThreadPointsBar";
 import ThreadPointsInline from "../../points/ThreadPointsInline";
+import RichEditor from "../../editor/RichEditor";
 import { __WIDTH__ } from "../../../assets/consts";
 
 interface ThreadCardProps {
@@ -21,10 +22,10 @@ const ThreadCard: FC<ThreadCardProps> = ({ thread }) => {
         history("/thread/" + thread.id);
     };
 
-    const getResponses = (thread: Thread) => {
+    const getResponseCount = (thread: Thread) => {
         if (width <= __WIDTH__) {
             return (
-                <label
+                <span
                     style={{
                         marginRight: ".5em",
                     }}
@@ -38,7 +39,7 @@ const ThreadCard: FC<ThreadCardProps> = ({ thread }) => {
                             marginTop: "-.25em",
                         }}
                     />
-                </label>
+                </span>
             );
         }
         return null;
@@ -74,7 +75,10 @@ const ThreadCard: FC<ThreadCardProps> = ({ thread }) => {
                         onClick={onClickShowThread}
                         data-thread-id={thread.id}
                     >
-                        <div>{thread.body}</div>
+                        <RichEditor
+                            existingBody={thread.body}
+                            readOnly={true}
+                        />
                     </div>
                     <div className="threadcard-footer">
                         <span
@@ -82,22 +86,13 @@ const ThreadCard: FC<ThreadCardProps> = ({ thread }) => {
                                 marginRight: ".5em",
                             }}
                         >
-                            <label>
-                                {thread.views}
-                                <FontAwesomeIcon
-                                    icon={faEye}
-                                    className="icon-lg"
-                                />
-                            </label>
+                            {thread.views}
+                            <FontAwesomeIcon icon={faEye} className="icon-lg" />
                         </span>
-                        <span>
-                            {width <= __WIDTH__ ? (
-                                <ThreadPointsInline
-                                    points={thread?.points || 0}
-                                />
-                            ) : null}
-                            {getResponses(thread)}
-                        </span>
+                        {width <= 768 ? (
+                            <ThreadPointsInline points={thread?.points || 0} />
+                        ) : null}
+                        {getResponseCount(thread)}
                     </div>
                 </div>
             </div>

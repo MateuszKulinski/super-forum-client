@@ -1,4 +1,4 @@
-import React, { FC, useReducer, useEffect } from "react";
+import React, { FC, useReducer, useEffect, HtmlHTMLAttributes } from "react";
 import ReactModal from "react-modal";
 import ModalProps from "../types/ModalProps";
 import userReducer from "./common/UserReducer";
@@ -31,18 +31,6 @@ const Login: FC<ModalProps> = ({ isOpen, onClickToggle }) => {
         });
 
     const { execMe, updateMe } = useRefreshReduxMe();
-    // const reduxDispatch = useDispatch();
-
-    // useEffect(() => {
-    //     // todo: replace with GraphQL call
-    //     reduxDispatch({
-    //         type: UserProfileSetType,
-    //         payload: {
-    //             id: 1,
-    //             userName: "testUser",
-    //         },
-    //     });
-    // }, [reduxDispatch]);
 
     const onChangeUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch({ type: "userName", payload: e.target.value });
@@ -69,6 +57,7 @@ const Login: FC<ModalProps> = ({ isOpen, onClickToggle }) => {
                 password,
             },
         });
+        console.log(result);
         execMe();
         updateMe();
     };

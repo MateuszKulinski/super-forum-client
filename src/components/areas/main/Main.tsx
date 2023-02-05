@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainHeader from "./MainHeader";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ThreadCard from "./ThreadCard";
 import Category from "../../../model/Category";
 import { gql, useLazyQuery } from "@apollo/client";
@@ -80,16 +80,19 @@ const Main = () => {
             data: threadsLatestData,
         },
     ] = useLazyQuery(GetThreadsLatest);
+
     const { categoryId } = useParams();
     const [category, setCategory] = useState<Category | undefined>();
     const [threadCards, setThreadCards] = useState<Array<JSX.Element> | null>(
         null
     );
+
+    const history = useNavigate();
+
     const test = false;
     if (test) throw new Error("Błąd w komponencie MAIN!!!");
 
     useEffect(() => {
-        console.log("main categoryId", categoryId);
         if (categoryId && parseInt(categoryId) > 0) {
             execGetThreadsByCat({
                 variables: {
@@ -115,11 +118,11 @@ const Main = () => {
             setThreadCards(cards);
         } else {
             execGetThreadsLatest();
+            setThreadCards(null);
         }
     }, [threadsByCatData]);
 
     useEffect(() => {
-        console.log("main threadsLatestData", threadsLatestData);
         if (
             threadsLatestData &&
             threadsLatestData.getThreadsLatest &&
@@ -135,8 +138,14 @@ const Main = () => {
         }
     }, [threadsLatestData]);
 
+    const onClickPostThread = () => {
+        history(`/thread`);
+    };
     return (
         <main className="content">
+            <button className="action-btn" onClick={onClickPostThread}>
+                Publikuj
+            </button>
             <MainHeader category={category} />
             <div>{threadCards}</div>
         </main>

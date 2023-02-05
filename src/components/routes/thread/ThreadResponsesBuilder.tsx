@@ -16,7 +16,6 @@ const ThreadResponsesBuilder: FC<ThreadResponsesBuilderProps> = ({
     const [responseElements, setResponseElements] = useState<
         JSX.Element | undefined
     >();
-
     useEffect(() => {
         if (threadItems) {
             const thResponses = threadItems.map((ti) => {
@@ -27,9 +26,9 @@ const ThreadResponsesBuilder: FC<ThreadResponsesBuilderProps> = ({
                             userName={ti.user.userName}
                             lastModifiedOn={ti.createdOn}
                             points={ti.points}
-                            readOnly={readOnly}
-                            userId={ti?.user.id || "0"}
+                            readOnly={readOnly || false}
                             threadItemId={ti?.id || "0"}
+                            threadId={ti.thread.id}
                             refreshThread={refreshThread}
                         />
                     </li>
@@ -40,8 +39,11 @@ const ThreadResponsesBuilder: FC<ThreadResponsesBuilderProps> = ({
     }, [threadItems, readOnly]);
 
     return (
-        <div className="thread-body-container">
-            <strong style={{ marginBottom: ".75em" }}>Responses</strong>
+        <div
+            className="thread-body-container"
+            style={{ marginBottom: "1.75em" }}
+        >
+            <strong>Odpowiedzi</strong>
             {responseElements}
         </div>
     );

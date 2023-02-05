@@ -40,7 +40,7 @@ const RightMenu = () => {
         }
     }, [categoryThreadData]);
 
-    if (width <= 768) {
+    if (width <= __WIDTH__) {
         return null;
     }
     return <div className="rightmenu rightmenu-container">{topCategories}</div>;

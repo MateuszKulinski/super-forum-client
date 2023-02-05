@@ -20,7 +20,7 @@ const MainHeader: FC<MainHeaderProps> = ({ category }) => {
                 />
             );
         } else {
-            return <strong>{category?.name || "Treść tymczasowa"}</strong>;
+            return <strong>{category?.name || "Najnowsze"}</strong>;
         }
     };
 

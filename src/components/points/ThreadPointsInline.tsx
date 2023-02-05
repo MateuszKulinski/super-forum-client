@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./ThreadPointsInline.css";
 import { gql, useMutation } from "@apollo/client";
+import useUpdateThreadPoint from "../../hooks/useUpdateThreadPoint";
 
 const UpdateThreadItemPoint = gql`
     mutation UpdateThreadItemPoint($threadItemId: ID!, $increment: Boolean!) {
@@ -33,6 +34,9 @@ const ThreadPointsInline: FC<ThreadPointsInlineProps> = ({
     refreshThread,
 }) => {
     const [execUpdateThreadItemPoint] = useMutation(UpdateThreadItemPoint);
+    const { onClickDecThreadPoint, onClickIncThreadPoint } =
+        useUpdateThreadPoint(refreshThread, threadId);
+
     const onClickIncThreadItemPoint = async (
         e: React.MouseEvent<SVGSVGElement, MouseEvent>
     ) => {
@@ -43,7 +47,6 @@ const ThreadPointsInline: FC<ThreadPointsInlineProps> = ({
                 increment: true,
             },
         });
-        console.log(refreshThread);
         refreshThread && refreshThread();
     };
     const onClickDecThreadItemPoint = async (
@@ -69,7 +72,11 @@ const ThreadPointsInline: FC<ThreadPointsInlineProps> = ({
                 <FontAwesomeIcon
                     icon={faChevronUp}
                     className="point-icon"
-                    onClick={onClickIncThreadItemPoint}
+                    onClick={
+                        threadId
+                            ? onClickIncThreadPoint
+                            : onClickIncThreadItemPoint
+                    }
                 />
             </div>
             {points}
@@ -80,7 +87,11 @@ const ThreadPointsInline: FC<ThreadPointsInlineProps> = ({
                 <FontAwesomeIcon
                     icon={faChevronDown}
                     className="point-icon"
-                    onClick={onClickDecThreadItemPoint}
+                    onClick={
+                        threadId
+                            ? onClickDecThreadPoint
+                            : onClickDecThreadItemPoint
+                    }
                 />
             </div>
             <div className="threadpointsinline-item-btn">

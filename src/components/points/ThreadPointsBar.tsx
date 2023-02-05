@@ -7,13 +7,7 @@ import {
     faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
-import { gql, useMutation } from "@apollo/client";
-
-const UpdateThreadPoint = gql`
-    mutation UpdateThreadPoint($threadId: ID!, $increment: Boolean!) {
-        updateThreadPoint(threadId: $threadId, increment: $increment)
-    }
-`;
+import useUpdateThreadPoint from "../../hooks/useUpdateThreadPoint";
 
 export class ThreadPointsBarProps {
     points: number = 0;
@@ -30,37 +24,10 @@ const ThreadPointsBar: FC<ThreadPointsBarProps> = ({
     allowUpdatePoints,
     refreshThread,
 }) => {
-    const [execUpdateThreadPoint] = useMutation(UpdateThreadPoint);
+    const { onClickDecThreadPoint, onClickIncThreadPoint } =
+        useUpdateThreadPoint(refreshThread, threadId);
     const { width } = useWindowDimensions();
-
-    const onClickIncThreadPoint = async (
-        e: React.MouseEvent<SVGSVGElement, MouseEvent>
-    ) => {
-        e.preventDefault();
-        await execUpdateThreadPoint({
-            variables: {
-                threadId,
-                increment: true,
-            },
-        });
-        refreshThread && refreshThread();
-    };
-
-    const onClickDecThreadPoint = async (
-        e: React.MouseEvent<SVGSVGElement, MouseEvent>
-    ) => {
-        e.preventDefault();
-        await execUpdateThreadPoint({
-            variables: {
-                threadId,
-                increment: false,
-            },
-        });
-        refreshThread && refreshThread();
-    };
-
     if (width > 768) {
-        console.log("Komponent ThreadPointsBar liczba punktów", points);
         return (
             <div className="threadcard-points">
                 <div className="threadcard-points-item">
